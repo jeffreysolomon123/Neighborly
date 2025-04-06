@@ -1,5 +1,6 @@
 import { Tabs } from "expo-router";
 import Ionicons from "@expo/vector-icons/Ionicons";
+import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 
 export default function TabLayout() {
   return (
@@ -14,6 +15,8 @@ export default function TabLayout() {
         tabBarStyle: {
           backgroundColor: "#ffffff",
         },
+        tabBarPressColor: "transparent", // For Android ripple
+        tabBarPressOpacity: 1, // For iOS fade (set to 1 = no fade)
       }}
     >
       <Tabs.Screen
@@ -31,6 +34,26 @@ export default function TabLayout() {
               name={focused ? "home-sharp" : "home-outline"}
               color={color}
               size={24}
+            />
+          ),
+        }}
+      />
+
+      <Tabs.Screen
+        name="CreatePost"
+        options={{
+          title: "Post",
+          tabBarIcon: ({
+            color,
+            focused,
+          }: {
+            color: string;
+            focused: boolean;
+          }) => (
+            <MaterialIcons
+              name={focused ? "add-circle" : "add-circle-outline"}
+              size={24}
+              color={color}
             />
           ),
         }}
