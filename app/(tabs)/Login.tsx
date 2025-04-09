@@ -8,6 +8,8 @@ import {
   Alert,
 } from "react-native";
 
+import { Image } from "expo-image";
+
 export default function Login({ navigation }: any) {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
@@ -29,6 +31,12 @@ export default function Login({ navigation }: any) {
 
   return (
     <View style={styles.container}>
+      <Image
+        style={styles.image}
+        source={require("../../assets/images/loginimage.png")}
+        contentFit="cover"
+        transition={1000}
+      />
       <Text style={styles.title}>Login</Text>
 
       <TextInput
@@ -65,6 +73,13 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     backgroundColor: "#fff",
   },
+  image: {
+    width: "100%", // or a fixed value like 300
+    height: 300,
+    borderRadius: 10,
+    marginBottom: 10,
+    alignSelf: "center", // center the image
+  },
   title: {
     fontSize: 28,
     fontWeight: "bold",
@@ -74,28 +89,31 @@ const styles = StyleSheet.create({
   input: {
     height: 50,
     borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
+    borderRadius: 30,
     paddingHorizontal: 12,
     marginBottom: 16,
     fontSize: 16,
+    backgroundColor: "#ececec",
+    paddingLeft: 20,
+    fontFamily: "Inter_400Regular",
   },
   button: {
-    backgroundColor: "#272727",
+    backgroundColor: "#1e5cff",
     paddingVertical: 14,
-    borderRadius: 8,
+    borderRadius: 30,
     marginBottom: 16,
   },
   buttonText: {
     color: "#fff",
-    fontWeight: "600",
     fontSize: 16,
     textAlign: "center",
+    fontFamily: "Inter_700Bold", // ✅ set here
   },
   link: {
     color: "#007bff",
     textAlign: "center",
     fontSize: 14,
     marginTop: 10,
+    fontFamily: "Inter_400Regular", // ✅ set here
   },
 });

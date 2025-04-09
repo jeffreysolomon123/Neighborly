@@ -4,7 +4,6 @@ import {
   Inter_400Regular,
   Inter_700Bold,
 } from "@expo-google-fonts/inter";
-import AppLoading from "expo-app-loading";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
@@ -27,13 +26,9 @@ export default function Register({ navigation }: any) {
     Inter_700Bold,
   });
 
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  }
-
   const handleRegister = () => {
     if (!phone || !password) {
-      Alert.alert("Error", "Please enter both phone number and password.");
+      Alert.alert("Oops!", "Enter all the fields");
       return;
     }
 
@@ -122,7 +117,7 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_400Regular", // ✅ set here
   },
   button: {
-    backgroundColor: "#272727",
+    backgroundColor: "#",
     paddingVertical: 14,
     borderRadius: 30,
     marginBottom: 16,
