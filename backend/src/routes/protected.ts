@@ -39,4 +39,42 @@ router.post("/post", authenticateToken, async (req:AuthRequest,res)=> {
 
 });
 
+
+router.post("/comment", authenticateToken, async (req:AuthRequest,res)=> {
+  const content = req.body.content;
+  const postId = req.body.postId;
+  const userId = req.body.userId;
+  try {
+    const comment = await prisma.comment.create({
+      data: {
+        content,
+        postId,
+        userId
+      },
+    })
+    res.sendStatus(201).json({ message: 'comment added', userId: userId });
+  } catch (error) {
+    console.log(error)
+  }
+})
+
+
+router.post("/reply", authenticateToken, async (req:AuthRequest,res)=> {
+  const content = req.body.content;
+  const commentId = req.body.commentId;
+  const userId = req.body.userId;
+  try {
+    const comment = await prisma.reply.create({
+      data: {
+        content,
+        commentId,
+        userId
+      },
+    })
+    res.sendStatus(201).json({ message: 'reply added', userId: userId });
+  } catch (error) {
+    console.log(error)
+  }
+})
+
 export default router;
