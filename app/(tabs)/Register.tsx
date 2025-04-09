@@ -117,7 +117,7 @@ const styles = StyleSheet.create({
     fontFamily: "Inter_400Regular", // ✅ set here
   },
   button: {
-    backgroundColor: "#",
+    backgroundColor: "#1e5cff",
     paddingVertical: 14,
     borderRadius: 30,
     marginBottom: 16,

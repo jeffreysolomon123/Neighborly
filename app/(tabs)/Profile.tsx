@@ -2,26 +2,14 @@ import React, { useState } from "react";
 import { Text, View, Image, StyleSheet, Pressable } from "react-native";
 import {
   useFonts,
-  Poppins_400Regular,
-  Poppins_700Bold,
-  Poppins_200ExtraLight,
-  Poppins_300Light,
-  Poppins_600SemiBold,
-  Poppins_100Thin,
-} from "@expo-google-fonts/poppins";
-import AppLoading from "expo-app-loading";
+  Inter_400Regular,
+  Inter_700Bold,
+} from "@expo-google-fonts/inter";
+
 import { useRouter } from "expo-router";
 
 export default function Profile() {
   const router = useRouter();
-  const [fontsLoaded] = useFonts({
-    Poppins_400Regular,
-    Poppins_700Bold,
-    Poppins_200ExtraLight,
-    Poppins_300Light,
-    Poppins_600SemiBold,
-    Poppins_100Thin,
-  });
 
   const [name, setName] = useState("Jeffrey Solomon");
   const [number, setNumber] = useState(9348577844);
@@ -29,9 +17,6 @@ export default function Profile() {
     "https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png"
   );
   const [address, setAddress] = useState("Kamarajar Nagar Perungudi");
-  if (!fontsLoaded) {
-    return <AppLoading />;
-  }
 
   return (
     <View style={styles.container}>
@@ -42,6 +27,7 @@ export default function Profile() {
       <Pressable onPress={() => router.push("/EditProfile")}>
         <Text style={styles.editButton}>Edit</Text>
       </Pressable>
+      <Text style={styles.name}>Feed</Text>
     </View>
   );
 }
@@ -51,6 +37,7 @@ const styles = StyleSheet.create({
     margin: 10,
     alignItems: "center",
     padding: 20,
+    backgroundColor: "white",
   },
   image: {
     width: 150,
@@ -60,24 +47,26 @@ const styles = StyleSheet.create({
   },
   name: {
     fontSize: 22,
-    marginBottom: 5,
-    fontFamily: "Poppins_400Regular",
+    fontFamily: "Inter_700Bold",
   },
   number: {
     fontSize: 17,
-    fontFamily: "Poppins_300Light", // or any other variant you want
+    fontFamily: "Inter_400Regular",
+    marginTop: 12,
   },
   address: {
     fontSize: 17,
-    fontFamily: "Poppins_300Light",
+    fontFamily: "Inter_400Regular",
+    marginTop: 10,
   },
   editButton: {
-    backgroundColor: "grey",
-    paddingRight: 20,
-    paddingLeft: 20,
+    backgroundColor: "#1e5cff",
+    width: 150,
+    textAlign: "center",
     paddingTop: 10,
     paddingBottom: 10,
     color: "white",
-    marginTop: 10,
+    marginTop: 22,
+    borderRadius: 30,
   },
 });
