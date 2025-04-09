@@ -6,30 +6,33 @@ dotenv.config();
 
 
 
-interface AuthRequest extends Request {
-    user? : any;
+
+// Create a custom interface extending Express's Request
+export interface AuthRequest extends Request {
+  user?: any;
 }
 
-export const authenticateToken = (
-    req : AuthRequest,
-    res : Response,
+  
+  export const authenticateToken = (
+    req: AuthRequest,
+    res: Response,
     next: NextFunction
-) => {
+  ): void => {
     const authHeader = req.headers.authorization;
-    const token = authHeader?.split(' ')[1]; // "Bearer <token>"
-    
+    const token = authHeader?.split(" ")[1]; // Bearer <token>
+  
     if (!token) {
-        return res.status(401).json({ message: 'No token provided' });
-      }
-
-    try {
-        const secret = process.env.JWT_SECRET!;
-        const decoded = jwt.verify(token, secret);
-
-        req.user = decoded;
-        next();
-    } catch (error) {
-        return res.status(403).json({message: "Invalid token"});
+      res.status(401).json({ message: "No token provided" });
+      return;
     }
-
-}
+  
+    try {
+      const secret = process.env.JWT_SECRET!;
+      const decoded = jwt.verify(token, secret);
+      req.user = decoded;
+      next();
+    } catch (error) {
+      res.status(403).json({ message: "Invalid token" });
+    }
+  };
+  

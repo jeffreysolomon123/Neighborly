@@ -1,19 +1,25 @@
-import express from 'express';
-import dotenv from 'dotenv';
-import authRoutes from './routes/auth';
+// backend/src/server.ts
+
+import express from "express";
+import dotenv from "dotenv";
+import authRoutes from "./routes/auth";
+import protectedRoutes from "./routes/protected";
 
 dotenv.config();
 
 const app = express();
+const PORT = process.env.PORT || 3000;
+
 app.use(express.json());
 
-// Mount auth routes
-app.use('/api/auth', authRoutes);
+// Routes
+app.use("/api/auth", authRoutes);
+app.use("/api", protectedRoutes); // 👈 now /api/posts is protected
 
-app.get('/', (req, res) => {
-  res.send('Server running ✅');
+app.get("/", (_req, res) => {
+  res.send("Neighbourhood API is running 🌐");
 });
 
-app.listen(3000, () => {
-  console.log('Server is listening on http://localhost:3000');
+app.listen(PORT, () => {
+  console.log(`✅ Server running on http://localhost:${PORT}`);
 });
