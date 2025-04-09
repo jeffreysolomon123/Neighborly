@@ -13,10 +13,10 @@ const prisma = new PrismaClient();
 
 // POST /register
 router.post('/register', async (req, res) => {
-  const { phone, password } = req.body;
+  const { name, phone, password } = req.body;
 
-  if (!phone || !password) {
-    return res.status(400).json({ message: 'Phone and password are required' });
+  if (!phone || !password || !name) {
+    return res.status(400).json({ message: 'Name, phone, and password are required' });
   }
 
   const existingUser = await prisma.user.findUnique({ where: { phone } });
@@ -28,9 +28,13 @@ router.post('/register', async (req, res) => {
   const hashedPassword = await bcrypt.hash(password, 10);
 
   const user = await prisma.user.create({
-    data: { phone, password: hashedPassword },
+    data: {
+      name,
+      phone,
+      password: hashedPassword,
+    },
   });
-
+  
   res.status(201).json({ message: 'User registered', userId: user.id });
 });
 
