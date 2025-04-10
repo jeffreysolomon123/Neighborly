@@ -7,6 +7,7 @@ import {
 } from "@expo-google-fonts/inter";
 
 import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 
 export default function Profile() {
   const router = useRouter();
@@ -18,6 +19,11 @@ export default function Profile() {
   );
   const [address, setAddress] = useState("Kamarajar Nagar Perungudi");
 
+  const handleLogOut = async () => {
+    await SecureStore.deleteItemAsync("token");
+    router.replace("/(auth)/Login");
+  };
+
   return (
     <View style={styles.container}>
       <Image style={styles.image} source={{ uri: image }} />
@@ -26,6 +32,11 @@ export default function Profile() {
       <Text style={styles.address}>{address}</Text>
       <Pressable onPress={() => router.push("/EditProfile")}>
         <Text style={styles.editButton}>Edit</Text>
+      </Pressable>
+      <Pressable onPress={() => "logout"}>
+        <Text style={styles.logOutButton} onPress={handleLogOut}>
+          Log Out
+        </Text>
       </Pressable>
       <Text style={styles.name}>Feed</Text>
     </View>
@@ -61,6 +72,16 @@ const styles = StyleSheet.create({
   },
   editButton: {
     backgroundColor: "#1e5cff",
+    width: 150,
+    textAlign: "center",
+    paddingTop: 10,
+    paddingBottom: 10,
+    color: "white",
+    marginTop: 22,
+    borderRadius: 30,
+  },
+  logOutButton: {
+    backgroundColor: "#ff4444",
     width: 150,
     textAlign: "center",
     paddingTop: 10,

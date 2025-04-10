@@ -1,4 +1,6 @@
 import React, { useState } from "react";
+import { useRouter } from "expo-router";
+import * as SecureStore from "expo-secure-store";
 import {
   View,
   Text,
@@ -7,14 +9,15 @@ import {
   TouchableOpacity,
   Alert,
 } from "react-native";
-
+import axios from "axios";
 import { Image } from "expo-image";
 
-export default function Login({ navigation }: any) {
+export default function Login() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
+  const router = useRouter();
 
-  const handleLogin = () => {
+  const handleLogin = async () => {
     if (!phone || !password) {
       Alert.alert("Error", "Please enter both phone number and password.");
       return;
@@ -25,8 +28,36 @@ export default function Login({ navigation }: any) {
       return;
     }
 
-    // Add login logic here
-    Alert.alert("Login pressed", `Phone: ${phone}`);
+    const data = {
+      phone: phone,
+      password: password,
+    };
+
+    try {
+      const response = await axios.post(
+        "http://192.168.1.9:3000/api/auth/login",
+        data,
+        {
+          withCredentials: true,
+        }
+      );
+      const { token, userId, message } = response.data;
+      console.log("Login Success:", message);
+
+      // ✅ Store credentials securely
+      await SecureStore.setItemAsync("token", token);
+      await SecureStore.setItemAsync("userId", userId.toString());
+
+      // ✅ Now navigate
+      router.replace("/");
+    } catch (error) {
+      alert("Something went wrong. Try again!");
+      if (axios.isAxiosError(error)) {
+        console.log("Axios Error:", error.response?.data || error.message);
+      } else {
+        console.log("Unknown error:", error);
+      }
+    }
   };
 
   return (
@@ -59,7 +90,7 @@ export default function Login({ navigation }: any) {
         <Text style={styles.buttonText}>Log In</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Register")}>
+      <TouchableOpacity onPress={() => router.push("/Register")}>
         <Text style={styles.link}>Don't have an account? Register</Text>
       </TouchableOpacity>
     </View>

@@ -8,6 +8,9 @@ import { authenticateToken } from '../middleware/authMiddleware';
 
 dotenv.config();
 
+
+
+
 const router = express.Router();
 const prisma = new PrismaClient();
 
@@ -61,7 +64,7 @@ router.post('/login', async (req, res) => {
   );
   
 
-  res.status(200).json({ message: 'Login successful', token });
+  res.status(200).json({ message: 'Login successful', token, userId : user.id });
 });
 
 

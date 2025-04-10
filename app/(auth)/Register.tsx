@@ -8,6 +8,7 @@ import {
 export const options = {
   headerShown: false,
 };
+import { useRouter } from "expo-router";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
@@ -20,8 +21,10 @@ import {
 } from "react-native";
 
 import { Image } from "expo-image";
+import axios from "axios";
 
-export default function Register({ navigation }: any) {
+export default function Register() {
+  const router = useRouter();
   const [phone, setPhone] = useState("");
   const [name, setName] = useState("");
   const [password, setPassword] = useState("");
@@ -30,7 +33,7 @@ export default function Register({ navigation }: any) {
     Inter_700Bold,
   });
 
-  const handleRegister = () => {
+  const handleRegister = async () => {
     if (!phone || !password) {
       Alert.alert("Oops!", "Enter all the fields");
       return;
@@ -41,8 +44,23 @@ export default function Register({ navigation }: any) {
       return;
     }
 
-    // Add register logic here
-    Alert.alert("Register pressed", `Phone: ${phone}`);
+    const data = {
+      name: name,
+      phone: phone,
+      password: password,
+    };
+
+    try {
+      await axios.post(
+        "http://192.168.1.9:3000/api/auth/register",
+        data, // ✅ FIXED: remove extra `{ data }` wrapping
+        { withCredentials: true }
+      );
+      router.push("/UserInfo"); // ✅ FIXED: working navigation
+    } catch (error) {
+      alert("Something went wrong. Try again!");
+      console.log("Registration error:", error); // ✅ More useful logging
+    }
   };
 
   return (
@@ -82,7 +100,7 @@ export default function Register({ navigation }: any) {
         <Text style={styles.buttonText}>Sign Up</Text>
       </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => navigation.navigate("Login")}>
+      <TouchableOpacity onPress={() => router.push("/(auth)/Login")}>
         <Text style={styles.link}>Already have an account? Log In</Text>
       </TouchableOpacity>
     </View>

@@ -1,7 +1,22 @@
 import { Text, View, ScrollView } from "react-native";
 import FeedPost from "@/components/FeedPost";
+import * as SecureStore from "expo-secure-store";
+import { useRouter } from "expo-router";
+import { useEffect } from "react";
 
 export default function Index() {
+  const router = useRouter();
+
+  useEffect(() => {
+    const checkLogin = async () => {
+      const token = await SecureStore.getItemAsync("token");
+      if (!token) {
+        router.replace("/(auth)/Login");
+      }
+    };
+    checkLogin();
+  }, []);
+
   return (
     <ScrollView>
       <FeedPost

@@ -4,11 +4,13 @@ import express from "express";
 import dotenv from "dotenv";
 import authRoutes from "./routes/auth";
 import protectedRoutes from "./routes/protected";
+import cors from "cors";
 
 dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+app.use(cors({ origin: "*", credentials: true }));
 
 app.use(express.json());
 

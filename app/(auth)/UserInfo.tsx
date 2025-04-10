@@ -36,7 +36,7 @@ export default function UserInfo() {
         </Picker>
       </View>
       <Pressable>
-        <Text style={styles.button}>Save</Text>
+        <Text style={styles.button}>Next</Text>
       </Pressable>
     </View>
   );
@@ -59,7 +59,7 @@ const styles = StyleSheet.create({
     marginTop: 20,
   },
   button: {
-    backgroundColor: "# ",
+    backgroundColor: "#1e5cff",
     paddingVertical: 14,
     borderRadius: 30,
     marginBottom: 16,
