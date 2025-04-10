@@ -1,8 +1,8 @@
-import React, { useState } from "react";
+import { useRouter, useNavigation } from "expo-router";
+import React, { useState, useLayoutEffect } from "react";
 import {
   Text,
-  View,
-  Button,
+  ScrollView,
   StyleSheet,
   TextInput,
   Alert,
@@ -10,12 +10,20 @@ import {
   Image,
 } from "react-native";
 import * as ImagePicker from "expo-image-picker";
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_700Bold,
+} from "@expo-google-fonts/inter";
 
-export default function Page() {
+export default function CreatePost() {
   const [content, setContent] = useState("");
   const [warning, setWarning] = useState("");
   const [image, setImage] = useState<string | null>(null);
   const [inputHeight, setInputHeight] = useState(120);
+
+  const router = useRouter();
+  const navigation = useNavigation();
 
   const pickImage = async () => {
     const { status } = await ImagePicker.requestMediaLibraryPermissionsAsync();
@@ -25,7 +33,7 @@ export default function Page() {
     }
 
     const result = await ImagePicker.launchImageLibraryAsync({
-      mediaTypes: ImagePicker.MediaTypeOptions.Images, // ✅ Use this instead
+      mediaTypes: ImagePicker.MediaTypeOptions.Images,
       quality: 1,
       allowsEditing: true,
     });
@@ -35,29 +43,49 @@ export default function Page() {
     }
   };
 
-  const removeImage = async () => {
+  const removeImage = () => {
     setImage(null);
   };
 
-  const submitHandle = async () => {
-    if (content === "") {
+  const submitHandle = () => {
+    if (content.trim() === "") {
       setWarning("Field cannot be blank!");
+      return;
     }
+
+    Alert.alert("Posted!", content);
+    router.back();
   };
 
+  useLayoutEffect(() => {
+    navigation.setOptions({
+      headerLeft: () => (
+        <Pressable onPress={() => router.back()}>
+          <Text style={styles.cancelButton}>Cancel</Text>
+        </Pressable>
+      ),
+      headerRight: () => (
+        <Pressable onPress={submitHandle}>
+          <Text style={styles.headerButton}>Post Feed</Text>
+        </Pressable>
+      ),
+      title: "",
+    });
+  }, [navigation, content]);
+
   return (
-    <View style={styles.container}>
+    <ScrollView contentContainerStyle={styles.container}>
       <TextInput
         placeholder="Share something with your neighbors..."
         value={content}
         multiline
         onChangeText={setContent}
-        onContentSizeChange={(event) => {
-          setInputHeight(event.nativeEvent.contentSize.height);
-        }}
+        onContentSizeChange={(event) =>
+          setInputHeight(event.nativeEvent.contentSize.height)
+        }
         style={[styles.textContainer, { height: Math.max(120, inputHeight) }]}
       />
-      <Text>{warning}</Text>
+      <Text style={{ color: "red" }}>{warning}</Text>
 
       {!image && (
         <Pressable onPress={pickImage}>
@@ -65,73 +93,79 @@ export default function Page() {
         </Pressable>
       )}
 
-      {image && <Image source={{ uri: image }} style={styles.imagePreview} />}
+      {image && (
+        <Image
+          source={{ uri: image }}
+          resizeMode="contain"
+          style={styles.imagePreview}
+        />
+      )}
 
       {image && (
         <Pressable onPress={removeImage}>
           <Text style={styles.removeButton}>Remove Image</Text>
         </Pressable>
       )}
-      <Pressable onPress={submitHandle}>
-        <Text style={styles.submitButton}>Submit</Text>
-      </Pressable>
-    </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
   container: {
     padding: 24,
-    flex: 1,
-    backgroundColor: "#fff",
+    paddingBottom: 50,
+    backgroundColor: "#ffffff",
+    flexGrow: 1,
   },
   imagePreview: {
-    width: "100%",
     height: 200,
     borderRadius: 10,
+    width: "100%",
     marginTop: 20,
   },
   textContainer: {
-    borderColor: "#ccc",
-    borderWidth: 1,
-    borderRadius: 8,
-    padding: 10,
+    padding: 20,
     textAlignVertical: "top",
     fontSize: 16,
     backgroundColor: "#fff",
     marginBottom: 20,
-  },
-  submitButton: {
-    backgroundColor: "grey",
-    paddingRight: 20,
-    paddingLeft: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: "white",
-    marginTop: 10,
-    width: 100,
-    textAlign: "center",
-  },
-  removeButton: {
-    backgroundColor: "blue",
-    paddingRight: 20,
-    paddingLeft: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: "white",
-    marginTop: 10,
-    width: 200,
-    textAlign: "center",
+    borderColor: "#dadada",
+    borderWidth: 2,
+    borderRadius: 15,
+    fontFamily: "Inter_400Regular",
   },
   uploadButton: {
-    backgroundColor: "blue",
-    paddingRight: 20,
-    paddingLeft: 20,
-    paddingTop: 10,
-    paddingBottom: 10,
-    color: "white",
+    backgroundColor: "#007bff",
+    color: "#fff",
+    padding: 10,
     marginTop: 10,
     width: 200,
     textAlign: "center",
+    borderRadius: 30,
+    alignSelf: "center",
+    fontFamily: "Inter_400Regular",
+  },
+  removeButton: {
+    backgroundColor: "#dc3545",
+    color: "#fff",
+    padding: 10,
+    marginTop: 10,
+    width: 200,
+    textAlign: "center",
+    borderRadius: 30,
+    alignSelf: "center",
+    fontFamily: "Inter_400Regular",
+  },
+  headerButton: {
+    color: "#007bff",
+    fontSize: 18,
+    marginHorizontal: 30,
+    fontFamily: "Inter_700Bold",
+  },
+  cancelButton: {
+    color: "black",
+    fontSize: 18,
+    marginHorizontal: 30,
+    fontFamily: "Inter_700Bold",
   },
 });

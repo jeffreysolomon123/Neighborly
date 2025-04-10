@@ -4,6 +4,10 @@ import {
   Inter_400Regular,
   Inter_700Bold,
 } from "@expo-google-fonts/inter";
+// Register.tsx
+export const options = {
+  headerShown: false,
+};
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
