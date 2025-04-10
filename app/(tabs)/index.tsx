@@ -2,23 +2,29 @@ import { Text, View, ScrollView } from "react-native";
 import FeedPost from "@/components/FeedPost";
 import * as SecureStore from "expo-secure-store";
 import { useRouter } from "expo-router";
-import { useEffect } from "react";
+import { useEffect, useState } from "react";
 
+import { getToken, getUserId } from "@/utils/auth";
 export default function Index() {
   const router = useRouter();
+  const [userId, setUserId] = useState<string | null>(null);
 
   useEffect(() => {
-    const checkLogin = async () => {
-      const token = await SecureStore.getItemAsync("token");
-      if (!token) {
-        router.replace("/(auth)/Login");
-      }
+    //this is used to get the saved token and userId from the auth.ts file
+    const fetchData = async () => {
+      const token = await getToken();
+      const userId = await getUserId();
+      setUserId(userId);
     };
-    checkLogin();
+
+    //this is used to check if the user's token is
+
+    fetchData();
   }, []);
 
   return (
     <ScrollView>
+      <Text>{userId}</Text>
       <FeedPost
         content="Hey everyone! I just moved into Orchid Apartments, flat 203. Excited to be part of the community!"
         date="2d"

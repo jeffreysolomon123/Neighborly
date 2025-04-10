@@ -8,6 +8,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  ScrollView,
 } from "react-native";
 import axios from "axios";
 import { Image } from "expo-image";
@@ -16,7 +17,7 @@ export default function Login() {
   const [phone, setPhone] = useState("");
   const [password, setPassword] = useState("");
   const router = useRouter();
-
+  const [loading, setLoading] = useState(true);
   const handleLogin = async () => {
     if (!phone || !password) {
       Alert.alert("Error", "Please enter both phone number and password.");
@@ -42,8 +43,6 @@ export default function Login() {
         }
       );
       const { token, userId, message } = response.data;
-      console.log("Login Success:", message);
-
       // ✅ Store credentials securely
       await SecureStore.setItemAsync("token", token);
       await SecureStore.setItemAsync("userId", userId.toString());
@@ -51,7 +50,7 @@ export default function Login() {
       // ✅ Now navigate
       router.replace("/");
     } catch (error) {
-      alert("Something went wrong. Try again!");
+      alert("Incorrect phone number or password!");
       if (axios.isAxiosError(error)) {
         console.log("Axios Error:", error.response?.data || error.message);
       } else {
@@ -61,43 +60,49 @@ export default function Login() {
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require("../../assets/images/loginimage.png")}
-        contentFit="cover"
-        transition={1000}
-      />
-      <Text style={styles.title}>Login</Text>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          source={require("../../assets/images/loginimage.png")}
+          contentFit="cover"
+          transition={1000}
+        />
+        <Text style={styles.title}>Login</Text>
 
-      <TextInput
-        placeholder="Phone Number"
-        keyboardType="phone-pad"
-        style={styles.input}
-        value={phone}
-        onChangeText={setPhone}
-      />
+        <TextInput
+          placeholder="Phone Number"
+          keyboardType="phone-pad"
+          style={styles.input}
+          value={phone}
+          onChangeText={setPhone}
+        />
 
-      <TextInput
-        placeholder="Password"
-        secureTextEntry
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-      />
+        <TextInput
+          placeholder="Password"
+          secureTextEntry
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+        />
 
-      <TouchableOpacity style={styles.button} onPress={handleLogin}>
-        <Text style={styles.buttonText}>Log In</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleLogin}>
+          <Text style={styles.buttonText}>Log In</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push("/Register")}>
-        <Text style={styles.link}>Don't have an account? Register</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={() => router.push("/Register")}>
+          <Text style={styles.link}>Don't have an account? Register</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
   container: {
     flex: 1,
     padding: 24,

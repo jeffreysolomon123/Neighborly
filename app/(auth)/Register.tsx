@@ -18,6 +18,7 @@ import {
   StyleSheet,
   TouchableOpacity,
   Alert,
+  ScrollView,
 } from "react-native";
 
 import { Image } from "expo-image";
@@ -64,50 +65,56 @@ export default function Register() {
   };
 
   return (
-    <View style={styles.container}>
-      <Image
-        style={styles.image}
-        source={require("../../assets/images/signupimage.png")}
-        contentFit="cover"
-        transition={1000}
-      />
-      <Text style={styles.title}>Sign Up</Text>
+    <ScrollView contentContainerStyle={styles.scrollContainer}>
+      <View style={styles.container}>
+        <Image
+          style={styles.image}
+          source={require("../../assets/images/signupimage.png")}
+          contentFit="cover"
+          transition={1000}
+        />
+        <Text style={styles.title}>Sign Up</Text>
 
-      <TextInput
-        placeholder="Name"
-        style={styles.input}
-        value={name}
-        onChangeText={setName}
-      />
+        <TextInput
+          placeholder="Name"
+          style={styles.input}
+          value={name}
+          onChangeText={setName}
+        />
 
-      <TextInput
-        placeholder="Phone Number"
-        keyboardType="phone-pad"
-        style={styles.input}
-        value={phone}
-        onChangeText={setPhone}
-      />
+        <TextInput
+          placeholder="Phone Number"
+          keyboardType="phone-pad"
+          style={styles.input}
+          value={phone}
+          onChangeText={setPhone}
+        />
 
-      <TextInput
-        placeholder="Password"
-        secureTextEntry
-        style={styles.input}
-        value={password}
-        onChangeText={setPassword}
-      />
+        <TextInput
+          placeholder="Password"
+          secureTextEntry
+          style={styles.input}
+          value={password}
+          onChangeText={setPassword}
+        />
 
-      <TouchableOpacity style={styles.button} onPress={handleRegister}>
-        <Text style={styles.buttonText}>Sign Up</Text>
-      </TouchableOpacity>
+        <TouchableOpacity style={styles.button} onPress={handleRegister}>
+          <Text style={styles.buttonText}>Sign Up</Text>
+        </TouchableOpacity>
 
-      <TouchableOpacity onPress={() => router.push("/(auth)/Login")}>
-        <Text style={styles.link}>Already have an account? Log In</Text>
-      </TouchableOpacity>
-    </View>
+        <TouchableOpacity onPress={() => router.push("/(auth)/Login")}>
+          <Text style={styles.link}>Already have an account? Log In</Text>
+        </TouchableOpacity>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = StyleSheet.create({
+  scrollContainer: {
+    flexGrow: 1,
+    justifyContent: "center",
+  },
   container: {
     flex: 1,
     padding: 24,
