@@ -4,11 +4,14 @@ import {
   Inter_400Regular,
   Inter_700Bold,
 } from "@expo-google-fonts/inter";
+
+import * as SecureStore from "expo-secure-store";
 // Register.tsx
 export const options = {
   headerShown: false,
 };
 import { useRouter } from "expo-router";
+import { supabase } from "@/utils/supabase";
 
 import MaterialIcons from "@expo/vector-icons/MaterialIcons";
 import {
@@ -52,12 +55,19 @@ export default function Register() {
     };
 
     try {
-      await axios.post(
-        "http://192.168.1.9:3000/api/auth/register",
-        data, // ✅ FIXED: remove extra `{ data }` wrapping
-        { withCredentials: true }
+      const response = await axios.post(
+        "http://192.168.1.8:3000/api/auth/register",
+        data,
+        {
+          withCredentials: true,
+        }
       );
-      router.push("/UserInfo"); // ✅ FIXED: working navigation
+
+      const { token, userId, message } = response.data;
+
+      await SecureStore.setItemAsync("token", token);
+      await SecureStore.setItemAsync("userId", userId.toString());
+      router.push("/UserInfo");
     } catch (error) {
       alert("Something went wrong. Try again!");
       console.log("Registration error:", error); // ✅ More useful logging

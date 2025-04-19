@@ -1,14 +1,9 @@
-import React from "react-native";
-import {
-  Text,
-  View,
-  Image,
-  StyleSheet,
-  Pressable,
-  TextInput,
-} from "react-native";
+import React, { useEffect, useState } from "react";
+import { Text, View, StyleSheet, Pressable, TextInput } from "react-native";
 import { Picker } from "@react-native-picker/picker";
-
+import { supabase } from "@/utils/supabase";
+import { getToken, getUserId } from "@/utils/auth";
+import * as SecureStore from "expo-secure-store";
 import {
   useFonts,
   Inter_400Regular,
@@ -16,10 +11,57 @@ import {
 } from "@expo-google-fonts/inter";
 
 import { useRouter } from "expo-router";
-import { useState } from "react";
 
 export default function UserInfo() {
-  const [area, setArea] = useState();
+  const [area, setArea] = useState("");
+  const [areas, setAreas] = useState([]);
+  const [userId, setUserId] = useState<string | null>(null);
+  const router = useRouter();
+
+  useEffect(() => {
+    const fetchAreas = async () => {
+      try {
+        const { data, error } = await supabase.from("areas").select("areaName");
+        if (error) {
+          console.log("Selecting areas from db error", error);
+          return;
+        }
+
+        const areaNames = data.map((item) => item.areaName);
+        setAreas(areaNames);
+      } catch (error) {
+        console.log(error);
+      }
+    };
+
+    const fetchData = async () => {
+      const token = await getToken();
+      const userId = await getUserId();
+      setUserId(userId);
+    };
+
+    fetchData();
+
+    fetchAreas();
+  }, []);
+
+  const handleNext = async () => {
+    console.log("Selected area:", area);
+
+    const { error } = await supabase
+      .from("users")
+      .update({ area: area }) // 👈 this updates the area column
+      .eq("id", userId); // 👈 only for the current user
+
+    if (error) {
+      console.log("Error updating user area:", error);
+      return;
+    }
+
+    await SecureStore.setItemAsync("area", area);
+    router.replace("/"); // navigate to home or wherever
+  };
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Select Area / Locality</Text>
@@ -31,11 +73,12 @@ export default function UserInfo() {
           dropdownIconColor="#666"
         >
           <Picker.Item label="Choose your area" value="" />
-          <Picker.Item label="Thoraipakkam" value="thoraipakkam" />
-          <Picker.Item label="Perungudi" value="perungudi" />
+          {areas.map((areaName) => (
+            <Picker.Item key={areaName} label={areaName} value={areaName} />
+          ))}
         </Picker>
       </View>
-      <Pressable>
+      <Pressable onPress={handleNext}>
         <Text style={styles.button}>Next</Text>
       </Pressable>
     </View>

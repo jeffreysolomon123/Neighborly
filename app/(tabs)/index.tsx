@@ -4,17 +4,23 @@ import * as SecureStore from "expo-secure-store";
 import { useRouter } from "expo-router";
 import { useEffect, useState } from "react";
 
-import { getToken, getUserId } from "@/utils/auth";
+import { getToken, getUserId, getArea } from "@/utils/auth";
 export default function Index() {
   const router = useRouter();
   const [userId, setUserId] = useState<string | null>(null);
+  const [area, setArea] = useState("");
 
   useEffect(() => {
     //this is used to get the saved token and userId from the auth.ts file
     const fetchData = async () => {
       const token = await getToken();
       const userId = await getUserId();
+      const area = await getArea();
       setUserId(userId);
+      setArea(area);
+      if (userId === null) {
+        router.replace("/(auth)/Login");
+      }
     };
 
     //this is used to check if the user's token is
@@ -24,34 +30,31 @@ export default function Index() {
 
   return (
     <ScrollView>
-      <Text>{userId}</Text>
       <FeedPost
-        content="Hey everyone! I just moved into Orchid Apartments, flat 203. Excited to be part of the community!"
-        date="2d"
-        numofcom="3"
-        name="Jeffrey"
-        place="Perungudi"
+        name="Meera Iyer"
+        content="Water supply will be interrupted in Perungudi from 10 AM to 2 PM tomorrow due to maintenance work. Please store water in advance."
+        date="April 14, 2025"
+        commentCount={12}
+      />
+
+      <FeedPost
+        name="Ravi Narayanan"
+        content="Just moved into 3rd Cross Street with my family. Would love to meet neighbors and know about local shops and services!"
+        date="April 10, 2025"
+        commentCount={5}
       />
       <FeedPost
-        content="Lost dog alert 🐶 — brown lab seen near Perungudi Bus Depot this morning. DM if spotted"
-        date="2d"
-        numofcom="3"
-        name="Robert"
-        place="Perungudi"
+        name="Ananya Sundar"
+        content="We're organizing a community clean-up drive this Saturday at 6:30 AM. Gloves and garbage bags will be provided. Let's make Perungudi greener!"
+        date="April 12, 2025"
+        commentCount={18}
       />
+
       <FeedPost
-        content="Thinking of starting a weekend running group at 6 AM near the lake. Who's in? "
-        date="2d"
-        numofcom="3"
-        name="Rahul"
-        place="Perungudi"
-      />
-      <FeedPost
-        content="Hey everyone! I just moved into Orchid Apartments, flat 203. Excited to be part of the community!"
-        date="2d"
-        numofcom="3"
-        name="Jeffrey"
-        place="Perungudi"
+        name="Shruti Bala"
+        content="Found a wallet near the old post office. Has a few cards and cash inside. DM me with identification if it's yours."
+        date="April 09, 2025"
+        commentCount={9}
       />
     </ScrollView>
   );

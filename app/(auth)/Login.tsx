@@ -36,16 +36,17 @@ export default function Login() {
 
     try {
       const response = await axios.post(
-        "http://192.168.1.9:3000/api/auth/login",
+        "http://192.168.1.8:3000/api/auth/login",
         data,
         {
           withCredentials: true,
         }
       );
-      const { token, userId, message } = response.data;
+      const { token, userId, message, area } = response.data;
       // ✅ Store credentials securely
       await SecureStore.setItemAsync("token", token);
       await SecureStore.setItemAsync("userId", userId.toString());
+      await SecureStore.setItemAsync("area", area);
 
       // ✅ Now navigate
       router.replace("/");

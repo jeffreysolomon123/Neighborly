@@ -16,3 +16,6 @@ export const getUserId = async () => {
     return await SecureStore.getItemAsync("userId");
 }
 
+export const getArea = async () => {
+    return await SecureStore.getItemAsync("area");
+}

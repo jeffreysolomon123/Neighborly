@@ -1,21 +1,24 @@
 import React from "react";
 import { View, Text, Image, StyleSheet } from "react-native";
+import {
+  useFonts,
+  Inter_400Regular,
+  Inter_700Bold,
+} from "@expo-google-fonts/inter";
 
-type FeedPostProps = {
-  name: string;
+type PostProps = {
   content: string;
   imageUrl?: string;
   date: string;
   commentCount: number;
 };
 
-export default function FeedPost({
-  name,
+export default function PersonalPost({
   content,
   imageUrl,
   date,
   commentCount,
-}: FeedPostProps) {
+}: PostProps) {
   return (
     <View style={styles.card}>
       {/* Top Row - Profile pic and name */}
@@ -24,13 +27,13 @@ export default function FeedPost({
           style={styles.profilePic}
           source={require("@/assets/images/noprofile.png")}
         />
-        <Text style={styles.name}>{name}</Text>
+        <Text style={styles.name}>You</Text>
       </View>
 
       {/* Post content */}
       <Text style={styles.content}>{content}</Text>
 
-      {/* Optional Image */}
+      {/* Image if available */}
       {imageUrl && (
         <Image
           style={styles.postImage}
@@ -39,7 +42,7 @@ export default function FeedPost({
         />
       )}
 
-      {/* Bottom Row - Date & Comments */}
+      {/* Bottom row - Date and Comments */}
       <View style={styles.bottomRow}>
         <Text style={styles.date}>{date}</Text>
         <Text style={styles.comments}>{commentCount} comments</Text>
